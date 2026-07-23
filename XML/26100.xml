@@ -1,0 +1,18 @@
+﻿<metalink xmlns="urn:ietf:params:xml:ns:metalink"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="metalink4.xsd">
+	<file name="KB5121767.msu">
+		<language>x64</language>
+		<hash type="sha-1">588e6404d4e909f2609486fd91a7b28f02d4be0a</hash>
+		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/e59e07a3-a66e-4fdf-ab6e-23da5b2a99d2/public/windows11.0-kb5121767-x64_588e6404d4e909f2609486fd91a7b28f02d4be0a.msu</url>
+	</file>
+	<file name="KB5106056.cab">
+		<language>x64</language>
+		<hash type="sha-1">bc6ea2307252c26f5c34bc9c96e2862e32883e36</hash>
+		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/8dff9b1c-af77-47a9-bed7-66e57dc05e45/public/windows11.0-kb5106056-x64_bc6ea2307252c26f5c34bc9c96e2862e32883e36.cab</url>
+	</file>
+	<file name="KB5100998.msu">
+		<language>x64</language>
+		<hash type="sha-1">339c932fd328785b23753facb676f86ac45778b7</hash>
+		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/6748a7f6-ecf2-41b3-8d8b-c7dafdcced8a/public/windows11.0-kb5100998-x64-ndp481_339c932fd328785b23753facb676f86ac45778b7.msu</url>
+	</file>
+</metalink>

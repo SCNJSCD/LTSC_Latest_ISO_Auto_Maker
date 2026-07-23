@@ -1,0 +1,33 @@
+﻿<metalink xmlns="urn:ietf:params:xml:ns:metalink"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="metalink4.xsd">
+	<file name="KB5101000-x86.msu">
+		<language>x86</language>
+		<hash type="sha-1">ab569aadce14fb09580b8aecd446732aa5f080cc</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/06/windows10.0-kb5101000-x86-ndp481_ab569aadce14fb09580b8aecd446732aa5f080cc.msu</url>
+	</file>
+	<file name="KB5099539-x86.msu">
+		<language>x86</language>
+		<hash type="sha-1">5fce1cafbdc79dae73ff6ca364ced8b8467bff62</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/07/windows10.0-kb5099539-x86_5fce1cafbdc79dae73ff6ca364ced8b8467bff62.msu</url>
+	</file>
+	<file name="KB5074207-x86.cab">
+		<language>x86</language>
+		<hash type="sha-1">867ec3f2ec6f743c7f14ae2527188eb25f6e8851</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2026/01/windows10.0-kb5074207-x86_867ec3f2ec6f743c7f14ae2527188eb25f6e8851.cab</url>
+	</file>
+	<file name="KB5101000-x64.msu">
+		<language>x64</language>
+		<hash type="sha-1">d2b329b2afb61f8b79456d71c449815375c86ade</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/06/windows10.0-kb5101000-x64-ndp481_d2b329b2afb61f8b79456d71c449815375c86ade.msu</url>
+	</file>
+	<file name="KB5099539-x64.msu">
+		<language>x64</language>
+		<hash type="sha-1">f0016a625ac328256041255cd23a42367ca59e33</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/07/windows10.0-kb5099539-x64_f0016a625ac328256041255cd23a42367ca59e33.msu</url>
+	</file>
+	<file name="KB5074207-x64.cab">
+		<language>x64</language>
+		<hash type="sha-1">4e08468033c309bb68c708a8157c7a29d3822fb5</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/crup/2026/01/windows10.0-kb5074207-x64_4e08468033c309bb68c708a8157c7a29d3822fb5.cab</url>
+	</file>
+</metalink>
