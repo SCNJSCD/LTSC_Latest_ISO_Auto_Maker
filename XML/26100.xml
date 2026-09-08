@@ -1,18 +1,18 @@
 ﻿<metalink xmlns="urn:ietf:params:xml:ns:metalink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="metalink4.xsd">
-	<file name="KB5122385.msu">
+	<file name="KB5126056.cab">
 		<language>x64</language>
-		<hash type="sha-1">c3cddfc782cca3dbc8fe5e4e60d359a20a446749</hash>
-		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/e70a6f70-3565-4830-abc3-b61e0e84b1be/public/windows11.0-kb5122385-x64-ndp481_c3cddfc782cca3dbc8fe5e4e60d359a20a446749.msu</url>
+		<hash type="sha-1">cb2aaf3f9dfaecbdfe9124a7a14bf0e4cca660de</hash>
+		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/526d124c-b602-4542-a5fe-40eab3be4f37/public/windows11.0-kb5126056-x64_cb2aaf3f9dfaecbdfe9124a7a14bf0e4cca660de.cab</url>
 	</file>
-	<file name="KB5120998.msu">
+	<file name="KB5126052.msu">
 		<language>x64</language>
-		<hash type="sha-1">5cdebefaecf780c7487e56a0d5472830a24a673a</hash>
-		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/7416ff4e-4741-42fb-a16b-0a92e2dfc42b/public/windows11.0-kb5120998-x64_5cdebefaecf780c7487e56a0d5472830a24a673a.msu</url>
+		<hash type="sha-1">082cfd5816914c794b261ea68bf6c91419fc32a8</hash>
+		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/aa6d5327-d621-4af8-8340-5a291e597f6b/public/windows11.0-kb5126052-x64-ndp481_082cfd5816914c794b261ea68bf6c91419fc32a8.msu</url>
 	</file>
-	<file name="KB5106084.cab">
+	<file name="KB5124008.msu">
 		<language>x64</language>
-		<hash type="sha-1">ad6d6fd66268f6d99cb87cbf1865eeed51846a75</hash>
-		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/da0ed5a7-2319-42e5-bae9-44c2498525e5/public/windows11.0-kb5106084-x64_ad6d6fd66268f6d99cb87cbf1865eeed51846a75.cab</url>
+		<hash type="sha-1">81e42f50fdb7af8d15eefc23aa51cf3e23215bdc</hash>
+		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/ed315343-4767-4a66-9be5-2a23bef1546e/public/windows11.0-kb5124008-x64_81e42f50fdb7af8d15eefc23aa51cf3e23215bdc.msu</url>
 	</file>
 </metalink>
