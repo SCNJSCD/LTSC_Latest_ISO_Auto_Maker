@@ -1,39 +1,39 @@
 ﻿<metalink xmlns="urn:ietf:params:xml:ns:metalink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="metalink4.xsd">
-	<file name="KB5120702-x86.msu">
+	<file name="KB5126047-x86.msu">
 		<language>x86</language>
-		<hash type="sha-1">6fa02d68793a06bc46a9759cdcca2c1fa2938e70</hash>
-		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/07/windows10.0-kb5120702-x86-ndp48_6fa02d68793a06bc46a9759cdcca2c1fa2938e70.msu</url>
+		<hash type="sha-1">153084f463eb3aaf7278d155e1654c0a990b45e9</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/08/windows10.0-kb5126047-x86-ndp48_153084f463eb3aaf7278d155e1654c0a990b45e9.msu</url>
 	</file>
-	<file name="KB5120418-x86.msu">
+	<file name="KB5123099-x86.msu">
 		<language>x86</language>
-		<hash type="sha-1">847a65b8671e79a3e7c9d3716aa7e3b631df3fa4</hash>
-		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/08/windows10.0-kb5120418-x86_847a65b8671e79a3e7c9d3716aa7e3b631df3fa4.msu</url>
+		<hash type="sha-1">db193ed8aa38fa34763585aeba2c350441fd33da</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/09/windows10.0-kb5123099-x86_db193ed8aa38fa34763585aeba2c350441fd33da.msu</url>
 	</file>
-	<file name="KB5120236-x86.msu">
+	<file name="KB5122874-x86.msu">
 		<language>x86</language>
-		<hash type="sha-1">3a5b32706e24e9d8c2b723aae5b319ba48495d1d</hash>
-		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/08/windows10.0-kb5120236-x86_3a5b32706e24e9d8c2b723aae5b319ba48495d1d.msu</url>
+		<hash type="sha-1">f94b9493306e3f66f9d4337bd49c616b63d92df2</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/09/windows10.0-kb5122874-x86_f94b9493306e3f66f9d4337bd49c616b63d92df2.msu</url>
 	</file>
 	<file name="KB5068794-x86.cab">
 		<language>x86</language>
 		<hash type="sha-1">6cf77fd5b0f590fda58604e3cd2cc7b1fa0ea1c3</hash>
 		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2025/10/windows10.0-kb5068794-x86_6cf77fd5b0f590fda58604e3cd2cc7b1fa0ea1c3.cab</url>
 	</file>
-	<file name="KB5120702-x64.msu">
+	<file name="KB5126047-x64.msu">
 		<language>x64</language>
-		<hash type="sha-1">69e7c6911ca109d1f6e23596c9ae9f248078da0a</hash>
-		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/07/windows10.0-kb5120702-x64-ndp48_69e7c6911ca109d1f6e23596c9ae9f248078da0a.msu</url>
+		<hash type="sha-1">3d28880eaadc4e37f38c266acf11e22eec4cfcf6</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/08/windows10.0-kb5126047-x64-ndp48_3d28880eaadc4e37f38c266acf11e22eec4cfcf6.msu</url>
 	</file>
-	<file name="KB5120418-x64.msu">
+	<file name="KB5123099-x64.msu">
 		<language>x64</language>
-		<hash type="sha-1">01010497460913dcc8c962bc430af7ad7b58dfca</hash>
-		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/08/windows10.0-kb5120418-x64_01010497460913dcc8c962bc430af7ad7b58dfca.msu</url>
+		<hash type="sha-1">28560cfadc1030ab60e40ddacd3683165f40bc58</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/09/windows10.0-kb5123099-x64_28560cfadc1030ab60e40ddacd3683165f40bc58.msu</url>
 	</file>
-	<file name="KB5120236-x64.msu">
+	<file name="KB5122874-x64.msu">
 		<language>x64</language>
-		<hash type="sha-1">cb878683b15f15cdd36dcd41be0d077553f3335d</hash>
-		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/08/windows10.0-kb5120236-x64_cb878683b15f15cdd36dcd41be0d077553f3335d.msu</url>
+		<hash type="sha-1">61985cacea651b4c00f5c7aebd819b8d18f7d125</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/09/windows10.0-kb5122874-x64_61985cacea651b4c00f5c7aebd819b8d18f7d125.msu</url>
 	</file>
 	<file name="KB5068794-x64.cab">
 		<language>x64</language>
