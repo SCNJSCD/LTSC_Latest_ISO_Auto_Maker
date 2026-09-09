@@ -1,34 +1,29 @@
 ﻿<metalink xmlns="urn:ietf:params:xml:ns:metalink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="metalink4.xsd">
-	<file name="KB5126046-x86.msu">
+	<file name="KB5120709-x86.msu">
 		<language>x86</language>
-		<hash type="sha-1">c24decf656f6d9709410f7b90e1f92d11e8d518a</hash>
-		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/08/windows10.0-kb5126046-x86-ndp48_c24decf656f6d9709410f7b90e1f92d11e8d518a.msu</url>
+		<hash type="sha-1">73d4a0923a366819a2e372450aa37b1c03dd9b75</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/07/windows10.0-kb5120709-x64-ndp481_9c42a6cd9555b841bf59ff80809345b13aff63e7.msu</url>
 	</file>
-	<file name="KB5126029-x86.cab">
+	<file name="KB5120249-x86.msu">
 		<language>x86</language>
-		<hash type="sha-1">5f39d0b992d779126e60628c404928a55aa51ae6</hash>
-		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/crup/2026/09/windows10.0-kb5126029-x86_5f39d0b992d779126e60628c404928a55aa51ae6.cab</url>
+		<hash type="sha-1">59c8d3ea8a1366a2a9878cc5c3286dfc5b47efcd</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/08/windows10.0-kb5120249-x86_59c8d3ea8a1366a2a9878cc5c3286dfc5b47efcd.msu</url>
 	</file>
-	<file name="KB5122878-x86.msu">
+	<file name="KB5074207-x86.cab">
 		<language>x86</language>
-		<hash type="sha-1">e93f20ece9039fcfdf2a699b15cf05214cd79bde</hash>
-		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/09/windows10.0-kb5122878-x86_e93f20ece9039fcfdf2a699b15cf05214cd79bde.msu</url>
+		<hash type="sha-1">867ec3f2ec6f743c7f14ae2527188eb25f6e8851</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2026/01/windows10.0-kb5074207-x86_867ec3f2ec6f743c7f14ae2527188eb25f6e8851.cab</url>
 	</file>
-	<file name="KB5126046-x64.msu">
+	<file name="KB5120709-x64.msu">
 		<language>x64</language>
-		<hash type="sha-1">28db9902cf368f5a674c016e0bd3f1d63ab8578d</hash>
-		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/08/windows10.0-kb5126046-x64-ndp48_28db9902cf368f5a674c016e0bd3f1d63ab8578d.msu</url>
+		<hash type="sha-1">49e376333f7dd8d07c2f8c32a2ace9b66193e005</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/07/windows10.0-kb5120709-x64-ndp481_9c42a6cd9555b841bf59ff80809345b13aff63e7.msu</url>
 	</file>
-	<file name="KB5126029-x64.cab">
+	<file name="KB5120249-x64.msu">
 		<language>x64</language>
-		<hash type="sha-1">34118900915d9aedd38ea87f586ae31c59ad98bb</hash>
-		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2026/09/windows10.0-kb5126029-x64_34118900915d9aedd38ea87f586ae31c59ad98bb.cab</url>
-	</file>
-	<file name="KB5122878-x64.msu">
-		<language>x64</language>
-		<hash type="sha-1">191c536a44656eb754daa7cb7e9b517b05d690f7</hash>
-		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/09/windows10.0-kb5122878-x64_191c536a44656eb754daa7cb7e9b517b05d690f7.msu</url>
+		<hash type="sha-1">60fb191db791c5c8bbd533eeb0224481ea01a01a</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/08/windows10.0-kb5120249-x64_60fb191db791c5c8bbd533eeb0224481ea01a01a.msu</url>
 	</file>
 	<file name="KB5074207-x64.cab">
 		<language>x64</language>
