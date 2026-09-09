@@ -1,7 +1,7 @@
 ﻿# Update-Meta4.ps1
 # 通过 MS 更新历史页面（主要）以及 KB 替代链和版本名称交叉验证生成 .meta4 文件。
-# 修改为每个系统版本（14393、17763、19041、26100）输出单个 XML，其中同时包含 x64 和 x86 更新。
-# 文件名统一格式：对于双架构版本 KBxxxxx-x64.cab / KBxxxxx-x86.msu；对于仅 x64 版本（26100）KBxxxxx.msu
+# 修改为每个系统版本输出单个 XML，其中同时包含 x64 和 x86 更新。
+# 文件名统一格式：对于双架构版本 KBxxxxx-x64.cab / KBxxxxx-x86.msu；对于仅 x64 版本 KBxxxxx.msu
 
 [CmdletBinding()]
 param([string[]]$Build = @(), [string[]]$Arch = @(), [string]$OutputDir = "", [switch]$TestMode)
@@ -12,13 +12,13 @@ if (-not $OutputDir) { $OutputDir = Join-Path $ScriptRoot "XML" }
 if (-not (Test-Path $OutputDir)) { New-Item $OutputDir -ItemType Directory -Force | Out-Null }
 
 $CFG = @{
-    "14393" = @{OP="windows10.0";L="LTSB 2016";        S1="Cumulative Update for Windows 10 Version 1607";          S3=".NET Framework 4.8 Windows 10 1607"}
-    "17763" = @{OP="windows10.0";L="LTSC 2019";        S1="Cumulative Update for Windows 10 Version 1809";          S3=".NET Framework 4.8 Windows 10 1809"}
-    "19041" = @{OP="windows10.0";L="22H2 / LTSC 2021"; S1="Cumulative Update for Windows 10 Version 22H2";         S3=".NET Framework 4.8.1 Windows 10 22H2";S4=".NET Framework 4.8 Windows 10 22H2"}
-    "26100" = @{OP="windows11.0";L="24H2";             S1="Cumulative Update for Windows 11 Version 24H2";         S3=".NET Framework 3.5 and 4.8.1 for Windows 11, version 25H2"}
+    "14393" = @{OP="windows10.0";L="LTSB 2016";        S1="Cumulative Update for Windows 10 Version 1607"; S3=".NET Framework 4.8 Windows 10 1607"}
+    "17763" = @{OP="windows10.0";L="LTSC 2019";        S1="Cumulative Update for Windows 10 Version 1809"; S3=".NET Framework 4.8 Windows 10 1809"}
+    "19041" = @{OP="windows10.0";L="22H2 / LTSC 2021"; S1="Cumulative Update for Windows 10 Version 22H2"; S3=".NET Framework 4.8.1 Windows 10 22H2"}
+    "26100" = @{OP="windows11.0";L="25H2";             S1="Cumulative Update for Windows 11 Version 25H2"; S3=".NET Framework 3.5 and 4.8.1 for Windows 11, version 25H2"}
 }
 $ARCH_LABEL = @{x64="for x64-based Systems"; x86="for x86-based Systems"}
-$ONLY_X64_BUILDS = @("26100")  # 仅支持 x64 的系统版本，文件名不包含架构后缀
+$ONLY_X64_BUILDS = @("26100")
 
 # 辅助函数：从 URL 或文件名推断架构
 function Get-ArchFromUrl {
@@ -114,12 +114,17 @@ function Follow-Chain { param($OldKb, $ArchPat, $OsPref)
     $chainCache[$key] = $result; return $result
 }
 
-function Bootstrap-Search { param($Term, $ArchPat, $OsPref, $Kind)
+function Bootstrap-Search { param($Term, $ArchPat, $OsPref, $Kind, $NetVersion = "")
     $r = Search-Catalog $Term
     if ($Kind -eq "LCU") {
         $best = $r | Where-Object { $_.Title -match $ArchPat -and $_.Title -match 'Cumulative Update' -and $_.Title -notmatch '\.NET' } | Sort-Object Title -Descending | Select-Object -First 1
     } else {
         $candidates = $r | Where-Object { $_.Title -match $ArchPat -and $_.Title -match '\.NET' }
+        if ($NetVersion) {
+            $candidates = $candidates | Where-Object { $_.Title -match [regex]::Escape($NetVersion) }
+            # 参考脚本同样排除“4.8 and 4.8.1”合并更新，避免其 ndp48 文件被误选。
+            if ($NetVersion -eq "4.8.1") { $candidates = $candidates | Where-Object { $_.Title -notmatch '4\.8\s+and\s+4\.8\.1' } }
+        }
         $best = $candidates | Where-Object { $_.Title -notmatch '4\.7\.2' }
         if ($Term -notmatch '4\.8\.1') { $best = $best | Where-Object { $_.Title -notmatch '4\.8\.1' } }
         $best = $best | Sort-Object Title -Descending | Select-Object -First 1
@@ -127,6 +132,10 @@ function Bootstrap-Search { param($Term, $ArchPat, $OsPref, $Kind)
     }
     if (-not $best -and $Kind -ne "LCU") {
         $candidates = $r | Where-Object { $_.Title -match '\.NET' -and $_.Title -notmatch 'for (x64|arm64)' }
+        if ($NetVersion) {
+            $candidates = $candidates | Where-Object { $_.Title -match [regex]::Escape($NetVersion) }
+            if ($NetVersion -eq "4.8.1") { $candidates = $candidates | Where-Object { $_.Title -notmatch '4\.8\s+and\s+4\.8\.1' } }
+        }
         $best = $candidates | Where-Object { $_.Title -notmatch '4\.7\.2' }
         if ($Term -notmatch '4\.8\.1') { $best = $best | Where-Object { $_.Title -notmatch '4\.8\.1' } }
         $best = $best | Sort-Object Title -Descending | Select-Object -First 1
@@ -145,16 +154,25 @@ function Bootstrap-Search { param($Term, $ArchPat, $OsPref, $Kind)
     $m = $links | Where-Object { $_.FileName -match [regex]::Escape($OsPref) }
     if (-not $m) { $m = $links }
     if ($Kind -eq "LCU") { return ($m | Where-Object { $_.FileName -match '\.msu$' -and $_ -notmatch 'ndp' } | Sort-Object KB -Descending | Select-Object -First 1) }
-    return ($m | Where-Object { $_.FileName -match 'ndp.*\.msu$' } | Select-Object -First 1)
+    $netFiles = $m | Where-Object { $_.FileName -match 'ndp.*\.msu$' }
+    if ($NetVersion -eq "4.8.1") {
+        $net481Files = $netFiles | Where-Object { $_.FileName -match '(?i)ndp481' }
+        if (-not $net481Files) { return $null }
+        $netFiles = $net481Files
+    }
+    return $netFiles | Select-Object -First 1
 }
 
-function Pick-File($Links, $Kind, $OsPref) {
+function Pick-File($Links, $Kind, $OsPref, $NetVersion = "") {
     $m = $Links | Where-Object { $_.FileName -match [regex]::Escape($OsPref) }
     if (-not $m) { $m = $Links }
     if ($Kind -eq "LCU") { return ($m | Where-Object { $_.FileName -match '\.msu$' -and $_ -notmatch 'ndp' } | Sort-Object KB -Descending | Select-Object -First 1) }
     if ($Kind -eq "SSU") { return ($m | Where-Object { $_.FileName -match '\.msu$' -and $_ -notmatch 'ndp' } | Sort-Object KB | Select-Object -First 1) }
     if ($Kind -eq "NET") {
         $r = $m | Where-Object { $_.FileName -match 'ndp.*\.msu$' }
+        if ($NetVersion -eq "4.8.1") {
+            $r = $r | Where-Object { $_.FileName -match '(?i)ndp481' }
+        }
         $filtered = $r | Where-Object { $_.FileName -match "^$OsPref" }
         if ($filtered) { $r = $filtered }
         return $r | Select-Object -First 1
@@ -209,6 +227,19 @@ function Test-IsNetMsu($File) {
     if (-not $url) { $url = [string]$File.url }
 
     return (($name -match '(?i)ndp.*\.msu$') -or ($url -match '(?i)ndp.*\.msu(?:$|\?)'))
+}
+
+# 19041 的 .NET 文件必须明确是 4.8.1；标准化文件名不含 ndp，故同时检查 URL。
+function Test-IsNet481Msu($File) {
+    if (-not $File) { return $false }
+
+    $name = [string]$File.FileName
+    if (-not $name) { $name = [string]$File.name }
+
+    $url = [string]$File.Url
+    if (-not $url) { $url = [string]$File.url }
+
+    return (($name -match '(?i)ndp481') -or ($url -match '(?i)ndp481'))
 }
 
 function Get-OldKBFromFile($Path, $Kind, $ArchPat, $Arch) {
@@ -451,11 +482,14 @@ foreach ($bn in $Build) {
         Write-Host "    .NET..." -NoNewline
         try {
             $chain = $null; $boot = $null
+            $netVersion = if ($bn -eq "19041") { "4.8.1" } else { "" }
             $okb = Get-OldKBFromFile $oldMeta4 "NET" $ap $ar
-            if ($okb) { $cl = Follow-Chain -OldKb $okb -ArchPat $ap -OsPref $c.OP; $chain = Pick-File $cl "NET" $c.OP }
-            $boot = Bootstrap-Search -Term $c.S3 -ArchPat $ap -OsPref $c.OP -Kind "NET"
-            if (-not $boot -and $c.S4) { $boot = Bootstrap-Search -Term $c.S4 -ArchPat $ap -OsPref $c.OP -Kind "NET" }
+            if ($okb) { $cl = Follow-Chain -OldKb $okb -ArchPat $ap -OsPref $c.OP; $chain = Pick-File $cl "NET" $c.OP $netVersion }
+            $boot = Bootstrap-Search -Term $c.S3 -ArchPat $ap -OsPref $c.OP -Kind "NET" -NetVersion $netVersion
             $f, $tag = Cross-Validate $chain $boot "NET"
+            if ($bn -eq "19041" -and $f -and -not (Test-IsNet481Msu $f)) {
+                $f = $null; $tag = "SKIP (not .NET 4.8.1)"
+            }
             if ($f -and $f.FileName -notmatch "^$($c.OP)") { $f = $null; $tag = "SKIP (OS mismatch)" }
             if ($f) {
                 $f | Add-Member -NotePropertyName Language -NotePropertyValue $ar -Force
@@ -473,12 +507,23 @@ foreach ($bn in $Build) {
         # Windows 11 24H2 所需的检查点 CU 由 Add-CheckpointCU 单独处理。
 
         # 5. CAB 链
-        $oldCabs = Get-Cabs $oldMeta4
+        # 每个架构只处理自己的旧 CAB，避免 x86/x64 互相把对方的 CAB 当成候选。
+        $oldCabs = Get-Cabs $oldMeta4 | Where-Object {
+            $oldCabArch = $_.Language
+            if (-not $oldCabArch) { $oldCabArch = Get-ArchFromUrl -Url $_.Url }
+            $oldCabArch -eq $ar
+        }
         foreach ($oc in $oldCabs) {
             $oldKb = Get-KB $oc
             if ($oldKb) {
                 $links = Follow-Chain -OldKb $oldKb -ArchPat $ap -OsPref $c.OP
-                $cab = $links | Where-Object { $_.FileName -match '\.cab$' } | Select-Object -First 1
+                # 更新链可能同时返回 x86/x64 文件，必须先按当前架构筛选再取 CAB。
+                $cab = $links | Where-Object {
+                    if ($_.FileName -notmatch '\.cab$') { return $false }
+                    $linkArch = Get-ArchFromUrl -Url $_.Url
+                    if ($linkArch) { return $linkArch -eq $ar }
+                    return $_.FileName -match "(?i)(^|[-_.])$ar([-. _]|$)"
+                } | Select-Object -First 1
                 if ($cab -and $cab.FileName -ne $oc.FileName -and ($cab.Url -notin $newFiles.Url)) {
                     # 从 URL 推断架构
                     $cabArch = Get-ArchFromUrl -Url $cab.Url -Fallback $ar
