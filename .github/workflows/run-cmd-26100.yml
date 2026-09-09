@@ -10,7 +10,7 @@ on:
         default: false
 
   schedule:
-    - cron: '57 19 * * 2'
+    - cron: '12 20 * * 2'
 
 permissions:
   contents: write
