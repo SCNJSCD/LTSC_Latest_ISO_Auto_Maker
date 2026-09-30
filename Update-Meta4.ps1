@@ -15,7 +15,7 @@ $CFG = @{
     "14393" = @{OP="windows10.0";L="LTSB 2016";        S1="Cumulative Update for Windows 10 Version 1607"; S3=".NET Framework 4.8 Windows 10 1607"}
     "17763" = @{OP="windows10.0";L="LTSC 2019";        S1="Cumulative Update for Windows 10 Version 1809"; S3=".NET Framework 4.8 Windows 10 1809"}
     "19041" = @{OP="windows10.0";L="22H2 / LTSC 2021"; S1="Cumulative Update for Windows 10 Version 22H2"; S3=".NET Framework 4.8.1 Windows 10 22H2"}
-    "26100" = @{OP="windows11.0";L="25H2";             S1="Cumulative Update for Windows 11 Version 25H2"; S3=".NET Framework 3.5 and 4.8.1 for Windows 11, version 25H2"}
+    "26100" = @{OP="windows11.0";L="26H2";             S1="Cumulative Update for Windows 11 Version 26H2"; S3=".NET Framework 3.5 and 4.8.1 for Windows 11, version 26H2"}
 }
 $ARCH_LABEL = @{x64="for x64-based Systems"; x86="for x86-based Systems"}
 $ONLY_X64_BUILDS = @("26100")
