@@ -32,14 +32,14 @@ for /l %%# in (1,1,%LCUTOTAL%) do set "LCU%%#=!UPDPath!\!LCU%%#_!"
 set "DNFCU=%UPDPath%\%DNFCU_%"
 set "SETUPDU=%UPDPath%\%SETUPDU_%"
 set "NETFX3=%UPDPath%\NetFx3"
-set "_25H2=%UPDPath%\KB5054156"
+set "_26H2=%UPDPath%\KB5121794"
 for /l %%a in (1,1,5) do (
     if not exist "%Mount%\%%a" md "%Mount%\%%a"
     echo %_DISM% /Quiet /Mount-Wim /WimFile:%WIMIMAGE%.wim /Index:%%a /MountDir:%Mount%\%%a
     %_DISM% /Quiet /Mount-Wim /WimFile:%WIMIMAGE%.wim /Index:%%a /MountDir:%Mount%\%%a
     if exist %Mount%\%%a\Windows\regedit.exe (
         call :addpkg %Mount%\%%a %SSU%
-        call :addpkg %Mount%\%%a %_25H2%
+        call :addpkg %Mount%\%%a %_26H2%
         if exist %Mount%\%%a\Windows\explorer.exe call :addpkg %Mount%\%%a %DNFCU%
         for /l %%# in (1,1,%LCUTOTAL%) do (
             call :addpkg %Mount%\%%a !LCU%%#!
