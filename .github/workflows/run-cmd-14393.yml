@@ -1,0 +1,104 @@
+name: Update 14393
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force full run'
+        required: false
+        type: boolean
+        default: false
+
+  schedule:
+    - cron: '42 19 * * 2'
+
+permissions:
+  contents: write
+
+jobs:
+  run-cmd-14393:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get XML SHA256 before update
+        shell: pwsh
+        env:
+          VERSION: 14393
+        run: |
+          $XmlPath = Join-Path "XML" "$env:VERSION.xml"
+          $BeforeHashFile = Join-Path $env:RUNNER_TEMP "xml_before.sha256"
+
+          if (Test-Path $XmlPath) {
+            (Get-FileHash -Algorithm SHA256 -LiteralPath $XmlPath).Hash |
+              Set-Content -Path $BeforeHashFile -Encoding UTF8
+          } else {
+            "__MISSING__" |
+              Set-Content -Path $BeforeHashFile -Encoding UTF8
+          }
+
+      - name: Update XML Meta4
+        shell: cmd
+        env:
+          VERSION: 14393
+        run: powershell -nop -ep Bypass -f Update-Meta4.ps1 -Build %VERSION%
+
+      - name: Commit XML changes
+        id: commit_xml
+        shell: pwsh
+        env:
+          VERSION: 14393
+          FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.force_run }}
+        run: |
+          $XmlPath = Join-Path "XML" "$env:VERSION.xml"
+          $XmlPathGit = "XML/$env:VERSION.xml"
+          $BeforeHashFile = Join-Path $env:RUNNER_TEMP "xml_before.sha256"
+          $ForceRun = "$env:FORCE_RUN".ToLower() -eq "true"
+
+          if (Test-Path $XmlPath) {
+            $AfterHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $XmlPath).Hash
+          } else {
+            $AfterHash = "__MISSING__"
+          }
+
+          $BeforeHash = (Get-Content -Raw -Path $BeforeHashFile).Trim()
+
+          if (($BeforeHash -eq $AfterHash) -and (-not $ForceRun)) {
+            Write-Host "$XmlPathGit SHA256 unchanged. Skip commit and Build.cmd."
+            "run_build=false" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+
+          if ($ForceRun) {
+            Write-Host "Force run enabled. Ignore SHA256 check and run Build.cmd."
+          } else {
+            Write-Host "$XmlPathGit SHA256 changed. Commit XML changes and run Build.cmd."
+          }
+
+          "run_build=true" >> $env:GITHUB_OUTPUT
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -- $XmlPathGit
+
+          if (git diff --cached --quiet) {
+            Write-Host "No XML changes to commit."
+          } else {
+            git commit -m "Update XML meta4 for $env:VERSION"
+            git push
+          }
+
+      - name: Run CMD Script
+        if: steps.commit_xml.outputs.run_build == 'true'
+        shell: cmd
+        env:
+          FILEN_AUTH: ${{ secrets.FILEN_AUTH }}
+          VERSION: 14393
+          HASH_14393: 576741e5775c0c390d53b38f209f1dfd4ea975495ecca2081296282df3743c1f
+          HASH_14393_BASE_UPD: a7eb91469dde1024ba217198a5af2d30f363ed4a2d3d971aea8fefb310fdd03c
+        run: Build.cmd
