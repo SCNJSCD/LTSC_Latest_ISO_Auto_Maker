@@ -1,0 +1,43 @@
+﻿<metalink xmlns="urn:ietf:params:xml:ns:metalink"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="metalink4.xsd">
+	<file name="KB5129239-x86.msu">
+		<language>x86</language>
+		<hash type="sha-1">cea60905af09326bae9a0566473b6887fb6ddad5</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/updt/2026/09/windows10.0-kb5129239-x86_cea60905af09326bae9a0566473b6887fb6ddad5.msu</url>
+	</file>
+	<file name="KB5126047-x86.msu">
+		<language>x86</language>
+		<hash type="sha-1">153084f463eb3aaf7278d155e1654c0a990b45e9</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/08/windows10.0-kb5126047-x86-ndp48_153084f463eb3aaf7278d155e1654c0a990b45e9.msu</url>
+	</file>
+	<file name="KB5122874-x86.msu">
+		<language>x86</language>
+		<hash type="sha-1">f94b9493306e3f66f9d4337bd49c616b63d92df2</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/09/windows10.0-kb5122874-x86_f94b9493306e3f66f9d4337bd49c616b63d92df2.msu</url>
+	</file>
+	<file name="KB5068794-x86.cab">
+		<language>x86</language>
+		<hash type="sha-1">6cf77fd5b0f590fda58604e3cd2cc7b1fa0ea1c3</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2025/10/windows10.0-kb5068794-x86_6cf77fd5b0f590fda58604e3cd2cc7b1fa0ea1c3.cab</url>
+	</file>
+	<file name="KB5129239-x64.msu">
+		<language>x64</language>
+		<hash type="sha-1">b8127a51e81ce7d7dcb4aec0f1cc2397665f6053</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/updt/2026/09/windows10.0-kb5129239-x64_b8127a51e81ce7d7dcb4aec0f1cc2397665f6053.msu</url>
+	</file>
+	<file name="KB5126047-x64.msu">
+		<language>x64</language>
+		<hash type="sha-1">3d28880eaadc4e37f38c266acf11e22eec4cfcf6</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/secu/2026/08/windows10.0-kb5126047-x64-ndp48_3d28880eaadc4e37f38c266acf11e22eec4cfcf6.msu</url>
+	</file>
+	<file name="KB5122874-x64.msu">
+		<language>x64</language>
+		<hash type="sha-1">61985cacea651b4c00f5c7aebd819b8d18f7d125</hash>
+		<url>https://catalog.s.download.windowsupdate.com/d/msdownload/update/software/secu/2026/09/windows10.0-kb5122874-x64_61985cacea651b4c00f5c7aebd819b8d18f7d125.msu</url>
+	</file>
+	<file name="KB5068794-x64.cab">
+		<language>x64</language>
+		<hash type="sha-1">8f6bdae0c8c562ed040cf4c9493006c65b93f5a7</hash>
+		<url>https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2025/10/windows10.0-kb5068794-x64_8f6bdae0c8c562ed040cf4c9493006c65b93f5a7.cab</url>
+	</file>
+</metalink>
