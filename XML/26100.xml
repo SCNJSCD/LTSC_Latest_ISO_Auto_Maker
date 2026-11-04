@@ -1,9 +1,9 @@
 ﻿<metalink xmlns="urn:ietf:params:xml:ns:metalink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="metalink4.xsd">
-	<file name="KB5134133.msu">
+	<file name="KB5127936.msu">
 		<language>x64</language>
-		<hash type="sha-1">0e59d2f988a5422dfb489e97faed3b3835fc7568</hash>
-		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/37e2df4b-2f39-44bf-b7d7-c75ae43cf4c8/public/windows11.0-kb5134133-x64_0e59d2f988a5422dfb489e97faed3b3835fc7568.msu</url>
+		<hash type="sha-1">50caf2fe2be948935a804656404d11f17929830b</hash>
+		<url>https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/f6638a86-82af-448b-8b8d-03857c230aed/public/windows11.0-kb5127936-x64_50caf2fe2be948935a804656404d11f17929830b.msu</url>
 	</file>
 	<file name="KB5127694.msu">
 		<language>x64</language>
