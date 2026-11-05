@@ -97,6 +97,9 @@ echo LCU     = %_LCU%
 echo DNFCU   = %_NET%
 echo SetupDU = %_SDU%
 
+for /f %%a in ('dir "%WORK_DIR%\%VERSION%\FILES\KB5127936" /ad /b ^| find /c /v ""') do echo %%a
+exit /b
+
 if "%VERSION%"=="14393" call _%VERSION%.cmd %MOUNT_DIR% %_SSU% %_NET% %_LCU% %_SDU%
 if "%VERSION%"=="17763" call _%VERSION%.cmd %MOUNT_DIR% %_SSU% %_NET% %_LCU% %_SDU%
 if "%VERSION%"=="19041" call _%VERSION%.cmd %MOUNT_DIR% %_SSU% %_NET% %_LCU% %_SDU%
