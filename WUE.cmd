@@ -48,6 +48,7 @@ echo WIM requires wimlib-imagex.exe: script directory first, then current direct
 echo target_path is the output root; default: the input file's directory.
 echo Each update gets a KB1234567-x64 folder, or KB1234567 with --no-arch.
 echo Existing output folders are never overwritten. Quote paths with spaces.
+echo MumX v2 LCU: the complete MSU is retained for DISM instead of loose files.
 echo By default only final Output: paths are shown. --show-detail shows progress.
 echo --export-info writes _NET.txt, _SSU.txt, _LCU.txt and _SDU.txt in the current directory.
 echo NET/SSU/LCU contain KB numbers; SDU contains the CAB name without -x64/-x86.
@@ -250,10 +251,11 @@ function Export-UpdateInfo([object[]]$Updates, [string]$Directory) {
     $info = @{}
     foreach ($update in $Updates) {
         # Re-read the completed payload: CAB parts or PSF may supply update.mum.
-        $identity = Get-Identity $update.Destination $update.Archive $update.Identity.Arch
+        if ($update.SourceMsu) { $identity = $update.Identity }
+        else { $identity = Get-Identity $update.Destination $update.Archive $update.Identity.Arch }
         # WUE_Old's plain CAB branch identifies setup DU by root-level DLLs.
         # Manifest-based updates keep their own classification.
-        if (!(Test-Path -LiteralPath (Join-Path $update.Destination 'update.mum') -PathType Leaf) -and
+        if (!$update.SourceMsu -and !(Test-Path -LiteralPath (Join-Path $update.Destination 'update.mum') -PathType Leaf) -and
             (Get-Format $update.Archive) -eq 'CAB' -and
             @(Get-ChildItem -LiteralPath $update.Destination -File -Filter '*.dll').Count -gt 0) {
             $info['SDU'] = [IO.Path]::GetFileNameWithoutExtension($update.Archive) -replace '(?i)-x64|-x86', ''
@@ -280,7 +282,25 @@ function Test-UpdateArchive([IO.FileInfo]$File) {
         $File.Name -match '(?i)^(?:Windows\d.*-KB\d+|SSU-|RCU-)')
 }
 
-function Collect-Updates([string]$Archive, [string]$InheritedArch = '', [int]$Depth = 0) {
+function Test-MumxV2([object[]]$Files) {
+    # W10UI :checkmsu: raw MUMX version is byte 7; the uncompressed
+    # WIM-wrapped form stores its MUMX header at byte 208.
+    foreach ($file in $Files) {
+        if ($file.Name -notmatch '(?i)^Windows.*\.mumx(?:\..+)?$') { continue }
+        $stream = [IO.File]::OpenRead($file.FullName)
+        try {
+            $bytes = New-Object byte[] 216
+            $count = $stream.Read($bytes, 0, $bytes.Length)
+            if ($file.Name -match '(?i)\.mumx$') { $offset = 0 } else { $offset = 208 }
+            if ($count -ge ($offset + 8) -and
+                [Text.Encoding]::ASCII.GetString($bytes, $offset, 4) -eq 'MUMX' -and
+                $bytes[$offset + 7] -ne 1) { return $true }
+        } finally { $stream.Dispose() }
+    }
+    return $false
+}
+
+function Collect-Updates([string]$Archive, [string]$InheritedArch = '', [int]$Depth = 0, [bool]$MetadataOnly = $false) {
     if ($Depth -gt 12) { throw "Too many nested update containers: $Archive" }
     # W10UI detector/tmprenssu process standalone SSUs first. uupssu/inrenssu
     # then check for an existing SSU-<version>-<arch>*.cab before extraction.
@@ -296,8 +316,18 @@ function Collect-Updates([string]$Archive, [string]$InheritedArch = '', [int]$De
     }
     $directory = Join-Path $script:Work ('pkg-' + $script:Counter)
     $script:Counter++
-    Expand-Archive $Archive $directory
+    if ($MetadataOnly) {
+        # The containing MumX v2 MSU must be installed whole. As in W10UI's
+        # msu1 path, extract only update.mum to identify the nested LCU.
+        if (!$script:Wimlib) { $script:Wimlib = Find-Wimlib }
+        if (!$script:Wimlib) { throw 'wimlib-imagex.exe is required for WIM archives.' }
+        [void][IO.Directory]::CreateDirectory($directory)
+        Invoke-Tool $script:Wimlib @('extract', $Archive, '1', '/update.mum', ('--dest-dir=' + $directory), '--no-acls', '--no-attributes', '--check') -ShowOutput
+    } else { Expand-Archive $Archive $directory }
     $identity = Get-Identity $directory $Archive $InheritedArch
+    if ($MetadataOnly -and $identity.UpdateTypes -notcontains 'LCU') {
+        throw "Expected an LCU WIM inside MumX v2 MSU: $Archive"
+    }
     if ($identity.IsSSU) {
         $identityKey = $identity.PackageName.ToLowerInvariant() + '|' + $identity.PackageVersion + '|' + $identity.Arch
         if (!$script:SeenSsuIdentities.Add($identityKey)) {
@@ -307,6 +337,10 @@ function Collect-Updates([string]$Archive, [string]$InheritedArch = '', [int]$De
         if ($ssuKey) { [void]$script:SeenSsuNames.Add($ssuKey) }
     }
     $files = @(Get-ChildItem -LiteralPath $directory -File -Force)
+    $mumxV2 = Test-MumxV2 $files
+    if ($mumxV2 -and [IO.Path]::GetExtension($Archive) -ine '.msu') {
+        throw "MumX v2 requires its complete MSU container: $Archive"
+    }
     foreach ($file in $files) {
         if ($file.Name -match '(?i)^DesktopDeployment(?:_x86)?\.cab$') { $script:Deployment.Add($file.FullName) }
     }
@@ -340,11 +374,29 @@ function Collect-Updates([string]$Archive, [string]$InheritedArch = '', [int]$De
     }
     if ($children.Count -gt 0) {
         $ordered = @($children | Sort-Object @{Expression={ if ($_.Name -match '(?i)^SSU-') { 0 } else { 1 } }}, FullName)
-        foreach ($child in $ordered) { Collect-Updates $child.FullName $identity.Arch ($Depth + 1) }
+        $firstUpdate = $script:Updates.Count
+        foreach ($child in $ordered) {
+            $metadataOnly = $mumxV2 -and $child.Name -match '(?i)^Windows.*-KB\d+.*\.wim$'
+            Collect-Updates $child.FullName $identity.Arch ($Depth + 1) $metadataOnly
+        }
+        if ($mumxV2) {
+            $matched = 0
+            for ($i = $firstUpdate; $i -lt $script:Updates.Count; $i++) {
+                $update = $script:Updates[$i]
+                if ($update.Identity.UpdateTypes -contains 'LCU') {
+                    if ($update.SourceMsu) { throw "Nested MumX v2 MSU is ambiguous: $Archive" }
+                    $update.SourceMsu = $Archive
+                    $matched++
+                }
+            }
+            if ($matched -ne 1) { throw "MumX v2 container must contain exactly one identifiable LCU: $Archive" }
+            Write-Detail 'MumX v2 detected: retaining the complete MSU for DISM.'
+        }
         return
     }
+    if ($mumxV2) { throw "Cannot identify the LCU inside MumX v2 MSU: $Archive" }
     if ($toc -or (!$mum -and [IO.Path]::GetExtension($Archive) -eq '.msu')) { throw "No update payload found in container: $Archive" }
-    $script:Updates.Add([pscustomobject]@{ Archive = $Archive; Directory = $directory; Identity = $identity })
+    $script:Updates.Add([pscustomobject]@{ Archive = $Archive; Directory = $directory; Identity = $identity; SourceMsu = '' })
 }
 
 function Get-Psf([object]$Update) {
@@ -563,13 +615,22 @@ try {
         $update | Add-Member NoteProperty Destination $destination
     }
     $dll = $null
-    if (@($script:Updates | Where-Object { @(Get-ChildItem -LiteralPath $_.Directory -File -Filter '*.psf.cix.xml').Count -gt 0 }).Count -gt 0) { $dll = Get-DeltaDll }
-    try { foreach ($update in $script:Updates) { Restore-Psf $update $dll } }
+    if (@($script:Updates | Where-Object { !$_.SourceMsu -and @(Get-ChildItem -LiteralPath $_.Directory -File -Filter '*.psf.cix.xml').Count -gt 0 }).Count -gt 0) { $dll = Get-DeltaDll }
+    try { foreach ($update in $script:Updates) { if (!$update.SourceMsu) { Restore-Psf $update $dll } } }
     finally { [WueNative]::ReleaseDelta() }
     # Publish only after every update has been fully extracted/reconstructed.
     foreach ($update in $script:Updates) {
-        [IO.Directory]::Move($update.Directory, $update.Destination)
-        Write-Host ('Output: {0}' -f $update.Destination)
+        if ($update.SourceMsu) {
+            $staging = Join-Path $script:Work ('msu-output-' + [guid]::NewGuid().ToString('N'))
+            [void][IO.Directory]::CreateDirectory($staging)
+            $name = [IO.Path]::GetFileName($update.SourceMsu)
+            [IO.File]::Copy($update.SourceMsu, (Join-Path $staging $name))
+            [IO.Directory]::Move($staging, $update.Destination)
+            Write-Host ('Output (MumX v2; use this MSU with DISM): {0}' -f (Join-Path $update.Destination $name))
+        } else {
+            [IO.Directory]::Move($update.Directory, $update.Destination)
+            Write-Host ('Output: {0}' -f $update.Destination)
+        }
     }
     if ($env:WUE_EXPORTINFO -eq '1') { Export-UpdateInfo $script:Updates (Get-Location).ProviderPath }
     # Only the unique directory created by this run may be recursively removed.
