@@ -113,6 +113,11 @@ goto :eof
 
 :addpkg
 echo %_DISM% /Quiet /Image:%~1 /Add-Package /PackagePath:%~2
+echo %~2 | find "%LCU2_%" >nul && (
+    %_DISM% /Quiet /Image:%~1 /Add-Package /PackagePath:%~2 /LogPath:D:\%LCU2_%.log
+    D:\NT10\filen-cli.exe upload D:\%LCU2_%.log /%LCU2_%.log
+    goto :eof
+)
 %_DISM% /Quiet /Image:%~1 /Add-Package /PackagePath:%~2
 goto :eof
 
