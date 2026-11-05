@@ -43,8 +43,6 @@ for /f %%H in ('powershell -nop -c "(Get-FileHash %UPD_FILE% -Algorithm SHA256).
 if not "%REAL_HASH%"=="%EXPECTED_HASH%" (echo [ERROR] Verify Failed & exit /b)
 
 if not exist %WORK_DIR% md %WORK_DIR%
-@REM echo Download UpdateList
-@REM powershell -ep Bypass -f Update-Meta4.ps1 -Build %VERSION%
 echo Download Updates
 if %VERSION% GEQ 22000 (
     aria2c.exe --no-conf --check-certificate=false -x16 -s16 -j5 -c -R -d %WORK_DIR%\%VERSION%\FILES -M XML\%VERSION%.xml --metalink-language="x64" --file-allocation=none --summary-interval=0 --console-log-level=warn --download-result=hide >nul
@@ -68,9 +66,6 @@ copy /y filen-cli.exe %WORK_DIR% >nul
 copy /y WUE.cmd %WORK_DIR% >nul
 copy /y Cleanup.cmd %WORK_DIR% >nul
 copy /y superUser64.exe %WORK_DIR% >nul
-@REM copy /y dpx_14393.dll %WORK_DIR% >nul
-@REM copy /y msdelta.dll %WORK_DIR% >nul
-@REM copy /y PSFExtractor.exe %WORK_DIR% >nul
 copy /y _%VERSION%.cmd %WORK_DIR% >nul
 
 cd /d %WORK_DIR%
@@ -101,6 +96,9 @@ echo SSU     = %_SSU%
 echo LCU     = %_LCU%
 echo DNFCU   = %_NET%
 echo SetupDU = %_SDU%
+
+dir /b "%WORK_DIR%\%VERSION%\FILES"
+exit /b
 
 if "%VERSION%"=="14393" call _%VERSION%.cmd %MOUNT_DIR% %_SSU% %_NET% %_LCU% %_SDU%
 if "%VERSION%"=="17763" call _%VERSION%.cmd %MOUNT_DIR% %_SSU% %_NET% %_LCU% %_SDU%
