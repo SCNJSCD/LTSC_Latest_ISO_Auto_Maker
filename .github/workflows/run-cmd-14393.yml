@@ -9,8 +9,8 @@ on:
         type: boolean
         default: false
 
-  schedule:
-    - cron: '42 19 * * 2'
+  # schedule:
+  #   - cron: '42 19 * * 2'
 
 permissions:
   contents: write
